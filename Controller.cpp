@@ -88,6 +88,7 @@ void Controller::addVax() {
 void Controller::drawElements(Graphics^ g, Bitmap^ bmpMask, Bitmap^ bmpVax){
 	for (int i = 0; i < arrElements.size(); i++) {
 		if (arrElements.at(i)->getElementType() == 1) {
+			bmpMask->MakeTransparent(Color::White);
 			arrElements.at(i)->drawFromImage(g, bmpMask);
 		}
 

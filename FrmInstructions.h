@@ -22,7 +22,7 @@ namespace FinalProject {
 			space = BufferedGraphicsManager::Current;
 			buffer = space->Allocate(g, this->ClientRectangle);
 			bmpBackgroundIns = gcnew Bitmap("images//background_ins.jpg");
-
+			bmpFrame = gcnew Bitmap("images//frame.png");
 			//
 			//TODO: Add the constructor code here
 			//
@@ -47,6 +47,7 @@ namespace FinalProject {
 		BufferedGraphics^ buffer;
 
 		Bitmap^ bmpBackgroundIns;
+		Bitmap^ bmpFrame;
 
 
 	private: System::Windows::Forms::Timer^ timer1;
@@ -85,11 +86,11 @@ namespace FinalProject {
 			this->btnReturn->Font = (gcnew System::Drawing::Font(L"Poor Richard", 22, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->btnReturn->ForeColor = System::Drawing::SystemColors::ButtonFace;
-			this->btnReturn->Location = System::Drawing::Point(935, 683);
+			this->btnReturn->Location = System::Drawing::Point(888, 887);
 			this->btnReturn->Name = L"btnReturn";
 			this->btnReturn->Size = System::Drawing::Size(288, 60);
 			this->btnReturn->TabIndex = 5;
-			this->btnReturn->Text = L"Return";
+			this->btnReturn->Text = L"Close";
 			this->btnReturn->UseVisualStyleBackColor = false;
 			this->btnReturn->Click += gcnew System::EventHandler(this, &FrmInstructions::btnReturn_Click);
 			// 
@@ -97,11 +98,11 @@ namespace FinalProject {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1275, 800);
+			this->ClientSize = System::Drawing::Size(1275, 1008);
 			this->Controls->Add(this->btnReturn);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"FrmInstructions";
-			this->Text = L"FrmInstructions";
+			this->Text = L"How to play\?";
 			this->WindowState = System::Windows::Forms::FormWindowState::Maximized;
 			this->Load += gcnew System::EventHandler(this, &FrmInstructions::FrmInstructions_Load);
 			this->ResumeLayout(false);
@@ -117,6 +118,26 @@ namespace FinalProject {
 		buffer->Graphics->Clear(Color::White);
 		//Map
 		buffer->Graphics->DrawImage(bmpBackgroundIns, 0, 0, this->Width, this->Height);
+		buffer->Graphics->DrawImage(bmpFrame, 300, 40, 930, 650);
+		//tiempo-vacunados-muertos
+		System::Drawing::Font^ f = gcnew System::Drawing::Font("Poor Richard", 20);
+		System::Drawing::SolidBrush^ sb = gcnew System::Drawing::SolidBrush(Color::LightYellow);
+		buffer->Graphics->DrawString("HOW TO PLAY? " , f, sb, 340, 120);
+		buffer->Graphics->DrawString("Covid has spread all over the world! Fortunately, a nurse has developed a vaccine " , f, sb, 340, 180);
+		buffer->Graphics->DrawString("but she needs your help so as to get many people vaccinated before they die. ", f, sb, 340, 210);
+		buffer->Graphics->DrawString("-> Use the arrows or AWSD to move the nurse", f, sb, 340, 260);
+		buffer->Graphics->DrawString("-> Use Space to pick an element and move it with you", f, sb, 340, 300);
+		buffer->Graphics->DrawString("-> The elements are automatically received by a citizen when you reach them", f, sb, 340, 340);
+		buffer->Graphics->DrawString("-> You have 100 seconds to save as many citizens as you can", f, sb, 340, 380);
+		buffer->Graphics->DrawString("Remember that a mask protects a citizen for 10 seconds. But use them wisely.", f, sb, 340, 430);
+		buffer->Graphics->DrawString("SCORE ", f, sb, 340, 480);
+		buffer->Graphics->DrawString("Vaccinated citizen: + 10 points ", f, sb, 340, 520);
+		buffer->Graphics->DrawString("Unvaccinated citizen but alive: + 5 points ", f, sb, 340, 560);
+		buffer->Graphics->DrawString("Dead citizen: - 5 points ", f, sb, 340, 600);
+		buffer->Graphics->DrawString("LEVELS  ", f, sb, 840, 480);
+		buffer->Graphics->DrawString("Lvl 1: Virus moves slowly ", f, sb, 840, 520);
+		buffer->Graphics->DrawString("Lvl 2: Virus moves faster", f, sb, 840, 560);
+		buffer->Graphics->DrawString("Good luck!", f, sb, 840, 600);
 		buffer->Render(g);
 	}
 

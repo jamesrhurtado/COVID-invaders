@@ -39,6 +39,7 @@ namespace FinalProject {
 			bmpInfected = gcnew Bitmap("images//zombie.png");
 			bmpCitizenMask = gcnew Bitmap("images//citizen_mask.png");
 			bmpCitizenVax = gcnew Bitmap("images//citizen_vax.png");
+			
 
 			//time
 			timeMaskGame = time(0);
@@ -90,6 +91,7 @@ namespace FinalProject {
 		Bitmap^ bmpInfected;
 		Bitmap^ bmpCitizenMask;
 		Bitmap^ bmpCitizenVax;
+		
 
 		//Time
 		time_t timeMaskGame;
@@ -118,6 +120,7 @@ namespace FinalProject {
 		void InitializeComponent(void)
 		{
 			this->components = (gcnew System::ComponentModel::Container());
+			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(FrmMain::typeid));
 			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->SuspendLayout();
 			// 
@@ -131,8 +134,9 @@ namespace FinalProject {
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(683, 441);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->Name = L"FrmMain";
-			this->Text = L"FrmMain";
+			this->Text = L"COVID invaders";
 			this->WindowState = System::Windows::Forms::FormWindowState::Maximized;
 			this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &FrmMain::FrmMain_KeyDown);
 			this->ResumeLayout(false);
@@ -152,11 +156,11 @@ namespace FinalProject {
 		//mask and vax appear each 3 and 5 seconds respectively
 
 		
-		if ((difftime(time(0), timeMaskGame)) > 5) {
+		if ((difftime(time(0), timeMaskGame)) > 3) {
 			_game->addMask();
 			timeMaskGame = time(0);
 		}
-		if ((difftime(time(0), timeVaxGame)) > 7) {
+		if ((difftime(time(0), timeVaxGame)) > 5) {
 			_game->addVax();
 			timeVaxGame = time(0);
 		}
@@ -172,23 +176,26 @@ namespace FinalProject {
 		_game->infectCitizens();
 		_game->spreadAmongCitizens();
 
-		if (difftime(time(0), timeGame) >= 125 || _game->getNDeaths() >= 5 || _game->getNVaccinated() >= 5) {
+		if (difftime(time(0), timeGame) >= 100 || _game->getNDeaths() >= citizens || _game->getNVaccinated() >= citizens || _game->getNVaccinated() >= (citizens -_game->getNDeaths())) {
 			//fnal counting
 			_game->countResults();
-			score = ((_game->getNDeaths() * 10) + (_game->getNSurvivors() * 5) - (_game->getNDeaths() * 5));
-			if (_game->getNVaccinated() >= 5) {
+			score = ((_game->getNVaccinated() * 10) + (_game->getNSurvivors() * 5) - (_game->getNDeaths() * 5));
+			if (_game->getNVaccinated() >= citizens) {
 				timer1->Enabled = false;
-				MessageBox::Show(" Has ganado! Puntaje total: " + score);
+				MessageBox::Show(" All citizens where vaccinated! Score: " + score);
 			}
-			if (_game->getNDeaths() >= 5) {
+			if (_game->getNDeaths() >= citizens) {
 				timer1->Enabled = false;
-				MessageBox::Show(" Has perdido! Puntaje total: " + score);
+				MessageBox::Show(" All citizens are dead! Score:: " + score);
 			}
 
-			if (difftime(time(0), timeGame) >= 75) {
+			if (difftime(time(0), timeGame) >= 100) {
 				timer1->Enabled = false;
-				MessageBox::Show(" Se agoto el tiempo! Puntaje total: " + score);
-
+				MessageBox::Show(" Time's  up. Score: " + score);
+			}
+			else if(_game->getNVaccinated() >= (citizens - _game->getNDeaths())) {
+				timer1->Enabled = false;
+				MessageBox::Show(" Game over. Score: " + score);
 			}
 
 			//code from the C programming language
@@ -202,6 +209,7 @@ namespace FinalProject {
 			data.push_back(std::to_string(virus));
 			data.push_back(std::to_string(score));
 			file->writeData(data);
+			this->Visible = false;
 		}
 
 		//Render
