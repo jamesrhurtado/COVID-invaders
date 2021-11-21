@@ -39,6 +39,7 @@ namespace FinalProject {
 			bmpInfected = gcnew Bitmap("images//zombie.png");
 			bmpCitizenMask = gcnew Bitmap("images//citizen_mask.png");
 			bmpCitizenVax = gcnew Bitmap("images//citizen_vax.png");
+			bmpFrame = gcnew Bitmap("images//frame.png");
 			
 
 			//time
@@ -91,6 +92,7 @@ namespace FinalProject {
 		Bitmap^ bmpInfected;
 		Bitmap^ bmpCitizenMask;
 		Bitmap^ bmpCitizenVax;
+		Bitmap^ bmpFrame;
 		
 
 		//Time
@@ -153,6 +155,18 @@ namespace FinalProject {
 		//Map
 		buffer->Graphics->DrawImage(bmpMap, 0, 0, this->Width, this->Height);
 
+		//Frame
+		buffer->Graphics->DrawImage(bmpFrame, 10, 4, 380, 50);
+
+		//Data
+		System::Drawing::Font^ f = gcnew System::Drawing::Font("Chiller", 18);
+		System::Drawing::SolidBrush^ sb = gcnew System::Drawing::SolidBrush(Color::LightYellow);
+		buffer->Graphics->DrawString("Time: " + Convert::ToString(difftime(time(0), timeGame)), f, sb, 14, 20);
+		buffer->Graphics->DrawString("Vaccinated: " + Convert::ToString(_game->getNVaccinated()), f, sb, 100, 20);
+		buffer->Graphics->DrawString("Deaths: " + Convert::ToString(_game->getNDeaths()), f, sb, 200, 20);
+
+
+
 		//mask and vax appear each 3 and 5 seconds respectively
 
 		
@@ -176,6 +190,8 @@ namespace FinalProject {
 		_game->infectCitizens();
 		_game->spreadAmongCitizens();
 
+
+		//end game
 		if (difftime(time(0), timeGame) >= 100 || _game->getNDeaths() >= citizens || _game->getNVaccinated() >= citizens || _game->getNVaccinated() >= (citizens -_game->getNDeaths())) {
 			//fnal counting
 			_game->countResults();
@@ -208,14 +224,12 @@ namespace FinalProject {
 			data.push_back(std::to_string(citizens));
 			data.push_back(std::to_string(virus));
 			data.push_back(std::to_string(score));
+			//saves the data of the recent player
 			file->writeData(data);
 			this->Visible = false;
 		}
-
 		//Render
 		buffer->Render(g);
-
-
 	}
 	private: System::Void FrmMain_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e) {
 		
